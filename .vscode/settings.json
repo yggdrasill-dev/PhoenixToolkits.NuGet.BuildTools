@@ -1,0 +1,7 @@
+{
+    "files.exclude": {
+        ".sarif": true,
+        ".vs": true,
+        ".vscode": true
+    }
+}
