@@ -1,0 +1,47 @@
+name: Build & Push
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+env:
+  BuildConfiguration: debug
+  NugetSource: nuget.org
+
+jobs:
+  build:
+    runs-on: self-hosted
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Pack
+        run: dotnet pack -c ${{env.BuildConfiguration}} --no-restore PhoenixToolkits.NuGet.BuildTools/PhoenixToolkits.NuGet.BuildTools.csproj
+
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          # Artifact name
+          name: nuget
+          # A file, directory or wildcard pattern that describes what to upload
+          path: PhoenixToolkits.NuGet.BuildTools/bin/${{env.BuildConfiguration}}/*.nupkg
+
+  push-nuget-package:
+    runs-on: self-hosted
+    needs: build
+    steps:
+      - name: Download a Build Artifact
+        uses: actions/download-artifact@v2
+        with:
+          # Artifact name
+          name: nuget
+          # Destination path
+          path: nuget
+      - name: push
+        run: |
+          dotnet nuget push "nuget\*.nupkg" -s "$($env:NugetSource)" -k "${{ secrets.PUBNUGETAPIKEY  }}" --skip-duplicate
