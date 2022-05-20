@@ -1,9 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net5.0</TargetFramework>
+		<TargetFramework>net6.0</TargetFramework>
 		<IncludeBuildOutput>false</IncludeBuildOutput>
-		<Version>0.0.1</Version>
+		<Version>0.0.2</Version>
 		<Authors>Phoenix</Authors>
 		<Company>Valhalla</Company>
 		<Description>輔助封裝NuGet package</Description>
@@ -15,8 +15,9 @@
 	</PropertyGroup>
 
 	<ItemGroup Label="NuGet package assets">
+		<None Pack="true" PackagePath="build\$(PackageId).props" Include="build\main.props" />
 		<None Pack="true" PackagePath="build\$(PackageId).targets" Include="build\main.targets" />
-		<None Pack="true" PackagePath="build\" Include="build\**\*.xml; build\**\*.props; build\**\*.targets;" Exclude="build\main.props;build\main.targets" />
+		<None Pack="true" PackagePath="build\" Include="build\**\*.xml; build\**\*.props; build\**\*.targets;" Exclude="build\main.*" />
 
 		<!-- Protobuf assets (for Google.Protobuf.Tools) -->
 		<_ProtoAssetName Include="Protos\**\*.proto" />
